@@ -18,6 +18,10 @@ configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
+    all {
+        exclude(module = "spring-boot-starter-logging")
+        exclude(group = "ch.qos.logback")
+    }
 }
 
 repositories {
@@ -31,12 +35,18 @@ dependencies {
     implementation("net.lenni0451.classtransform:mixinsdummy:1.14.1")
     implementation("net.lenni0451.classtransform:mixinstranslator:1.14.1")
     implementation("net.lenni0451.classtransform:additionalclassprovider:1.14.1")
-    // Reflection
     implementation("net.lenni0451:Reflect:1.5.0")
 
+    // Logs
+    implementation("org.apache.logging.log4j:log4j-api:2.24.3")
+    implementation("org.apache.logging.log4j:log4j-core:2.24.3")
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.24.3")
+
+    // Lombok
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
+    // Spring
     implementation("org.springframework.boot:spring-boot-starter:3.5.0")
 }
 
