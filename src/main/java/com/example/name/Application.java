@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph;
+package com.example.name;
 
 import lombok.extern.slf4j.Slf4j;
 import net.lenni0451.classtransform.TransformerManager;

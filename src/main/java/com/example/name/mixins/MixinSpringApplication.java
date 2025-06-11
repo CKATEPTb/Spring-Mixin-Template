@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.mixins;
+package com.example.name.mixins;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spongepowered.asm.mixin.Mixin;
