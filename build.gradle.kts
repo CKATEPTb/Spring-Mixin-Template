@@ -1,11 +1,12 @@
+group = "com.example" // todo CHANGE ME
+version = "0.0.1-SNAPSHOT"
+var mainClass = "${project.group}.${project.name.lowercase()}.Application"
+
 plugins {
     java
     id("com.gradleup.shadow").version("8.3.6")
     id("io.spring.dependency-management").version("1.1.7")
 }
-
-group = "dev.ckateptb"
-version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
@@ -39,7 +40,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter:3.5.0")
 }
 
-var application = "${project.group}.${project.name.lowercase()}.Application"
 tasks {
     shadowJar {
         archiveClassifier.set("")
@@ -50,9 +50,7 @@ tasks {
     jar {
         manifest {
             attributes(
-                "Main-Class" to application,
-                "Agent-Class" to application,
-                "Premain-Class" to application,
+                "Main-Class" to mainClass
             )
         }
     }
