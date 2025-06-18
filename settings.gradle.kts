@@ -1,1 +1,1 @@
-rootProject.name = "name" // todo CHANGE ME
+rootProject.name = "WebMorph"
