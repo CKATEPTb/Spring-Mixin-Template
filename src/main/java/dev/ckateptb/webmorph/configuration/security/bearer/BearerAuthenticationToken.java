@@ -1,61 +1,45 @@
 package dev.ckateptb.webmorph.configuration.security.bearer;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.Getter;
 import lombok.Setter;
+import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.model.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.Collections;
 
-// todo
 @Getter
 @Setter
 public class BearerAuthenticationToken implements Authentication {
-    private final String token;
-    private final Long identifier;
-    private final String username;
-    private final String password;
-    private final Collection<? extends GrantedAuthority> authorities;
+    private final User principal;
+    private final DecodedJWT credentials;
+    private boolean authenticated;
 
-    public BearerAuthenticationToken(String token) {
-        this.token = token;
-        DecodedJWT decode = JWT.decode(token);
-        this.identifier = decode.getClaim("sub").asLong();
-        this.username = decode.getClaim("username").asString();
-        this.password = decode.getClaim("password").asString();
-        this.authorities = Set.of(decode.getClaim("typ").asArray(SimpleGrantedAuthority.class));
+    public BearerAuthenticationToken(User principal, DecodedJWT credentials) {
+        this.principal = principal;
+        this.credentials = credentials;
     }
 
     @Override
-    public Object getCredentials() {
-        return null;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+         return Collections.emptyList();
+//        return this.principal.getCachedData().getPermissionData().getPermissionMap().entrySet().stream()
+//                .filter(Map.Entry::getValue)
+//                .map(Map.Entry::getKey)
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
-    public Object getDetails() {
-        return null;
-    }
-
-    @Override
-    public Object getPrincipal() {
-        return null;
-    }
-
-    @Override
-    public boolean isAuthenticated() {
-        return false;
-    }
-
-    @Override
-    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+    public CachedMetaData getDetails() {
+        return this.principal.getCachedData().getMetaData();
     }
 
     @Override
     public String getName() {
-        return "";
+        return this.principal.getUsername();
     }
 }

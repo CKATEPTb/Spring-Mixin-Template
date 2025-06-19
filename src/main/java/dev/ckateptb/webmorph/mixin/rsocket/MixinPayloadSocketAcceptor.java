@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.mixins.rsocket;
+package dev.ckateptb.webmorph.mixin.rsocket;
 
 import io.rsocket.ConnectionSetupPayload;
 import io.rsocket.RSocket;

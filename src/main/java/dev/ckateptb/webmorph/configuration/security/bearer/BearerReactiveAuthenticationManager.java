@@ -1,51 +1,63 @@
 package dev.ckateptb.webmorph.configuration.security.bearer;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.luckperms.api.model.user.User;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-// todo
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class BearerReactiveAuthenticationManager implements ReactiveAuthenticationManager {
-    //    @Value("org.sbooster.webmorph.jwt.secret")
-//    private final String secret;
-    private final Algorithm algorithm = Algorithm.HMAC256("this.secret");
+    private final Optional<Algorithm> algorithm;
+    @Getter
+    private final Algorithm dummyAlgorithm = Algorithm.HMAC256("dummy");
+
+    @PostConstruct
+    public void warnOnDummyAlgorithm() {
+        if (this.algorithm.isEmpty()) log.warn("No authentication algorithm configured." +
+                "Algorithm bean not found in current application context.");
+    }
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
-//        if (authentication instanceof BearerAuthenticationToken bearerAuthentication) {
-//            return this.validate(bearerAuthentication)
-//                    .map(isValid -> {
-//                        log.debug("Bearer token validation result for {} is {}", bearerAuthentication, isValid);
-//                        bearerAuthentication.setAuthenticated(isValid);
-//                        return bearerAuthentication;
-//                    });
-        /*} else*/
-        return Mono.error(new IllegalArgumentException("BearerPayloadExchangeConverter is only supported for now"));
+        return this.validate(authentication)
+                .doOnNext(authentication::setAuthenticated)
+                .thenReturn(authentication);
     }
 
-    private Mono<Boolean> validate(BearerAuthenticationToken authentication) {
-//        UserDetails details = authentication.getPrincipal();
-//        return Mono.fromCallable(() -> {
-//            JWT.require(this.algorithm)
-//                    .withSubject(String.valueOf(details.getId()))
-//                    .withClaim("ema", userDetails.getUsername())
-//                    .withClaim("pwd", userDetails.getPassword())
-//                    .withArrayClaim("typ", userDetails.getAuthorities()
-//                            .stream()
-//                            .map(GrantedAuthority::getAuthority)
-//                            .toArray(String[]::new)
-//                    )
-//                    .build().verify(token);
-//            return true;
-//        }).onErrorReturn(false);
-        return Mono.just(true);
+    public Mono<Boolean> validate(Authentication authentication) {
+        if (!(authentication instanceof BearerAuthenticationToken token)) return Mono.just(false);
+        User principal = token.getPrincipal();
+        return Mono.fromCallable(() -> {
+            JWT.require(this.algorithm.orElse(this.dummyAlgorithm))
+                    .withSubject(principal.getUniqueId().toString())
+                    .withClaim("ema", principal.getUsername())
+                    .withClaim("pwd", principal.getCachedData().getMetaData().getMetaValue("pwd"))
+                    .build()
+                    .verify(token.getCredentials());
+            return true;
+        }).onErrorReturn(false);
     }
 
+    public Mono<String> generateJWT(User user, boolean rememberMe) {
+        Instant now = Instant.now();
+        return Mono.fromCallable(() -> JWT.create()
+                .withSubject(user.getUniqueId().toString())
+                .withClaim("ema", user.getUsername())
+                .withClaim("pwd", user.getCachedData().getMetaData().getMetaValue("pwd"))
+                .withExpiresAt(rememberMe ? now.plus(12, ChronoUnit.HOURS) : now.plus(6, ChronoUnit.HOURS)) // TODO: Grep from configuration properties
+                .sign(this.algorithm.orElse(this.dummyAlgorithm)));
+    }
 }

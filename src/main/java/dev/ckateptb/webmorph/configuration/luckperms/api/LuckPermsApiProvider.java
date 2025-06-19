@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.configuration.luckperms.interfaces;
+package dev.ckateptb.webmorph.configuration.luckperms.api;
 
 import net.luckperms.api.LuckPerms;
 

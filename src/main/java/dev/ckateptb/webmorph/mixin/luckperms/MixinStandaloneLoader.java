@@ -1,6 +1,6 @@
-package dev.ckateptb.webmorph.mixins.luckperms;
+package dev.ckateptb.webmorph.mixin.luckperms;
 
-import dev.ckateptb.webmorph.configuration.luckperms.interfaces.LuckPermsApiProvider;
+import dev.ckateptb.webmorph.configuration.luckperms.api.LuckPermsApiProvider;
 import me.lucko.luckperms.standalone.app.LuckPermsApplication;
 import me.lucko.luckperms.standalone.loader.StandaloneLoader;
 import net.luckperms.api.LuckPerms;

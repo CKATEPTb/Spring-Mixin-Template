@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.mixins.luckperms;
+package dev.ckateptb.webmorph.mixin.luckperms;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

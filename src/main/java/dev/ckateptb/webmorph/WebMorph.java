@@ -3,7 +3,7 @@ package dev.ckateptb.webmorph;
 import dev.ckateptb.reflection.Reflect;
 import dev.ckateptb.webmorph.configuration.WebMorphConfiguration;
 import dev.ckateptb.webmorph.eventbus.EventBus;
-import dev.ckateptb.webmorph.events.MixinTransformerRegistrationEvent;
+import dev.ckateptb.webmorph.event.MixinTransformerRegistrationEvent;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.lenni0451.classtransform.TransformerManager;
@@ -38,7 +38,7 @@ public class WebMorph {
         TransformerManager transformer = new TransformerManager(new GuavaClassPathProvider());
         transformer.addTransformerPreprocessor(new MixinsTranslator());
         MixinTransformerRegistrationEvent event = new MixinTransformerRegistrationEvent();
-        event.addTransformer(WebMorph.class.getPackageName() + ".mixins.**");
+        event.addTransformer(WebMorph.class.getPackageName() + ".mixin.**");
         event.dispatch();
         event.getTransformers().forEach(transformer::addTransformer);
         transformer.hookInstrumentation(Agents.getInstrumentation());

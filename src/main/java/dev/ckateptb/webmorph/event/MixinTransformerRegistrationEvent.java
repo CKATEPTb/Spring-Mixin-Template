@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.events;
+package dev.ckateptb.webmorph.event;
 
 import dev.ckateptb.webmorph.eventbus.event.Event;
 import lombok.Getter;

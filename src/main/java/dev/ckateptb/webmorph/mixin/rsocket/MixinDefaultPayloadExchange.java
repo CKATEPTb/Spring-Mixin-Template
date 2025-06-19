@@ -1,6 +1,6 @@
-package dev.ckateptb.webmorph.mixins.rsocket;
+package dev.ckateptb.webmorph.mixin.rsocket;
 
-import dev.ckateptb.webmorph.configuration.rsocket.interfaces.RSocketHolder;
+import dev.ckateptb.webmorph.configuration.rsocket.api.RSocketHolder;
 import io.rsocket.RSocket;
 import lombok.Getter;
 import lombok.Setter;

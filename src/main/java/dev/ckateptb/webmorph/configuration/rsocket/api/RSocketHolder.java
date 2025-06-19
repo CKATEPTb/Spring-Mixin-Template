@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.configuration.rsocket.interfaces;
+package dev.ckateptb.webmorph.configuration.rsocket.api;
 
 import io.rsocket.RSocket;
 

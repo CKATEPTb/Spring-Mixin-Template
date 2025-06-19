@@ -19,7 +19,6 @@ import org.springframework.validation.Validator;
 import org.springframework.web.method.ControllerAdviceBean;
 import org.springframework.web.util.pattern.PathPatternRouteMatcher;
 
-// todo
 @Configuration
 public class RSocketConfiguration {
     private static final MimeType MESSAGE_RSOCKET_AUTHENTICATION = MimeType.valueOf(WellKnownMimeType.MESSAGE_RSOCKET_AUTHENTICATION.getString());
@@ -31,14 +30,14 @@ public class RSocketConfiguration {
                 .decoder(new Jackson2JsonDecoder())
                 .routeMatcher(new PathPatternRouteMatcher())
                 .metadataExtractorRegistry(registry -> {
-                    registry.metadataToExtract(MESSAGE_RSOCKET_AUTHENTICATION, byte[].class, (s, stringObjectMap) -> {
-                        ByteBuf rawAuthentication = Unpooled.wrappedBuffer(s);
-                        WellKnownAuthType value = AuthMetadataCodec.readWellKnownAuthType(rawAuthentication);
+                    registry.metadataToExtract(MESSAGE_RSOCKET_AUTHENTICATION, byte[].class, (s, map) -> {
+                        ByteBuf raw = Unpooled.wrappedBuffer(s);
+                        WellKnownAuthType value = AuthMetadataCodec.readWellKnownAuthType(raw);
                         switch (value) {
                             case BEARER ->
-                                    stringObjectMap.put("authentication", new String(AuthMetadataCodec.readBearerTokenAsCharArray(rawAuthentication)));
+                                    map.put("auth", new String(AuthMetadataCodec.readBearerTokenAsCharArray(raw)));
                             case SIMPLE ->
-                                    throw new UnsupportedOperationException("Simple authentication not supported!");
+                                    throw new UnsupportedOperationException("Simple auth not supported!");
                         }
                     });
                 })

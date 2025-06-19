@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.configuration.security.interfaces;
+package dev.ckateptb.webmorph.configuration.security.api;
 
 import org.springframework.security.core.Authentication;
 

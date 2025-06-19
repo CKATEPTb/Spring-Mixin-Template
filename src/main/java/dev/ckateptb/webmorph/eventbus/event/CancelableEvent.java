@@ -9,7 +9,7 @@ import lombok.Setter;
  *
  * <p>This class extends {@link Event} by introducing a {@code canceled} flag, which allows
  * listeners to interrupt or halt further processing of the event. It is commonly used
- * when an operation should be vetoable, such as authentication, validation, or user-driven actions.</p>
+ * when an operation should be vetoable, such as auth, validation, or user-driven actions.</p>
  *
  * <p>Event handlers can check the cancellation state using {@link #isCanceled()},
  * and may invoke {@link #setCanceled(boolean)} to modify it. By default, the event is not cancelled.</p>

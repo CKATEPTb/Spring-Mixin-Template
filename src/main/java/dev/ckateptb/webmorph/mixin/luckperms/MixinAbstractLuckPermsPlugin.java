@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.mixins.luckperms;
+package dev.ckateptb.webmorph.mixin.luckperms;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;

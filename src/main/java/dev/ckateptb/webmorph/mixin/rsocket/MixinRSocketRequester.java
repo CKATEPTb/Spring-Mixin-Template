@@ -1,6 +1,6 @@
-package dev.ckateptb.webmorph.mixins.rsocket;
+package dev.ckateptb.webmorph.mixin.rsocket;
 
-import dev.ckateptb.webmorph.configuration.security.interfaces.AuthHolder;
+import dev.ckateptb.webmorph.configuration.security.api.AuthHolder;
 import lombok.Getter;
 import lombok.Setter;
 import org.spongepowered.asm.mixin.Mixin;
