@@ -1,7 +1,7 @@
 package dev.ckateptb.webmorph.mixins.rsocket;
 
-import io.rsocket.Payload;
 import dev.ckateptb.webmorph.configuration.rsocket.interfaces.RSocketHolder;
+import io.rsocket.Payload;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

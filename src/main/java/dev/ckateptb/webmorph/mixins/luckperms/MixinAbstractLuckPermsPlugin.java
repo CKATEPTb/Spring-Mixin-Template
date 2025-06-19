@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 /**
- * A Mixin that replaces the default configuration directory used by LuckPerms with a
+ * A Mixin that hides luckperms banner, replaces the default configuration directory used by LuckPerms with a
  * temporary directory and programmatically overrides the contents of {@code config.yml}
  * based on values defined in {@code application.properties}.
  *
@@ -53,8 +53,12 @@ import java.util.Properties;
 @Slf4j
 @Mixin(targets = "me.lucko.luckperms.common.plugin.AbstractLuckPermsPlugin")
 public class MixinAbstractLuckPermsPlugin {
-    private Path configPath;
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+    private Path configPath;
+
+    @Redirect(method = "enable", at = @At(value = "INVOKE", target = "Lme/lucko/luckperms/common/locale/Message$Args1;send(Lme/lucko/luckperms/common/sender/Sender;Ljava/lang/Object;)V"))
+    public final void hideStartupBanner(Object message, Object sender, Object bootstrap) {
+    }
 
     @SneakyThrows
     @Redirect(method = "resolveConfig", at = @At(value = "INVOKE", target = "Lme/lucko/luckperms/common/plugin/bootstrap/LuckPermsBootstrap;getConfigDirectory()Ljava/nio/file/Path;"))

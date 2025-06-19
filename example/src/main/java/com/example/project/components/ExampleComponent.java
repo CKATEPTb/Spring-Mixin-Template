@@ -1,4 +1,4 @@
-package com.example.example.components;
+package com.example.project.components;
 
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;

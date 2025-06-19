@@ -1,8 +1,8 @@
 package dev.ckateptb.webmorph.events;
 
+import dev.ckateptb.webmorph.eventbus.event.Event;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import dev.ckateptb.webmorph.eventbus.event.Event;
 
 import java.util.Collection;
 import java.util.Collections;

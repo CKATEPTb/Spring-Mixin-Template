@@ -2,11 +2,11 @@ package dev.ckateptb.webmorph.eventbus;
 
 import dev.ckateptb.reflection.Reflect;
 import dev.ckateptb.webmorph.eventbus.annotation.EventHandler;
-import lombok.extern.slf4j.Slf4j;
 import dev.ckateptb.webmorph.eventbus.event.CancelableEvent;
 import dev.ckateptb.webmorph.eventbus.event.Event;
 import dev.ckateptb.webmorph.eventbus.event.EventPriority;
 import dev.ckateptb.webmorph.eventbus.listener.Listener;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import reactor.core.Disposable;

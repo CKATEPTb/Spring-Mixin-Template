@@ -1,18 +1,18 @@
 package dev.ckateptb.webmorph;
 
 import dev.ckateptb.reflection.Reflect;
+import dev.ckateptb.webmorph.configuration.WebMorphConfiguration;
+import dev.ckateptb.webmorph.eventbus.EventBus;
+import dev.ckateptb.webmorph.events.MixinTransformerRegistrationEvent;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.lenni0451.classtransform.TransformerManager;
 import net.lenni0451.classtransform.additionalclassprovider.GuavaClassPathProvider;
 import net.lenni0451.classtransform.mixinstranslator.MixinsTranslator;
 import net.lenni0451.reflect.Agents;
-import dev.ckateptb.webmorph.configuration.WebMorphConfiguration;
-import dev.ckateptb.webmorph.eventbus.EventBus;
-import dev.ckateptb.webmorph.events.MixinTransformerRegistrationEvent;
 import org.springframework.boot.Banner;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 
@@ -28,9 +28,12 @@ import java.util.Set;
 public class WebMorph {
     public static final EventBus EVENT_BUS = new EventBus();
 
+    public static GenericApplicationContext bootstrap(String[] args) {
+        return bootstrap(getCallerClass(), args);
+    }
+
     @SneakyThrows
-    public static AnnotationConfigApplicationContext bootstrap(String[] args) {
-        Class<?> clazz = getCallerClass();
+    public static GenericApplicationContext bootstrap(Class<?> clazz, String[] args) {
         TransformerManager transformer = new TransformerManager(new GuavaClassPathProvider());
         transformer.addTransformerPreprocessor(new MixinsTranslator());
         MixinTransformerRegistrationEvent event = new MixinTransformerRegistrationEvent();
@@ -39,7 +42,7 @@ public class WebMorph {
         event.getTransformers().forEach(transformer::addTransformer);
         transformer.hookInstrumentation(Agents.getInstrumentation());
         ClassLoader classLoader = GuavaClassPathProvider.class.getClassLoader();
-        AnnotationConfigApplicationContext context = (AnnotationConfigApplicationContext) new SpringApplicationBuilder(clazz)
+        GenericApplicationContext context = (GenericApplicationContext) new SpringApplicationBuilder(clazz)
                 .sources(WebMorphConfiguration.class, clazz)
                 .headless(true)
                 .bannerMode(Banner.Mode.OFF)

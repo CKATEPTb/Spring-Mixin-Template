@@ -1,8 +1,8 @@
 package dev.ckateptb.webmorph.configuration.luckperms;
 
+import dev.ckateptb.webmorph.configuration.luckperms.interfaces.LuckPermsApiProvider;
 import me.lucko.luckperms.standalone.loader.StandaloneLoader;
 import net.luckperms.api.LuckPerms;
-import dev.ckateptb.webmorph.configuration.luckperms.interfaces.LuckPermsApiProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;

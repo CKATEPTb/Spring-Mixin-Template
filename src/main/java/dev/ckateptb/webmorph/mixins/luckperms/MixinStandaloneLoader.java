@@ -1,9 +1,9 @@
 package dev.ckateptb.webmorph.mixins.luckperms;
 
+import dev.ckateptb.webmorph.configuration.luckperms.interfaces.LuckPermsApiProvider;
 import me.lucko.luckperms.standalone.app.LuckPermsApplication;
 import me.lucko.luckperms.standalone.loader.StandaloneLoader;
 import net.luckperms.api.LuckPerms;
-import dev.ckateptb.webmorph.configuration.luckperms.interfaces.LuckPermsApiProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

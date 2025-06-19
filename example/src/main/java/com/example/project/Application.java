@@ -1,4 +1,4 @@
-package com.example.example;
+package com.example.project;
 
 import dev.ckateptb.webmorph.WebMorph;
 import lombok.SneakyThrows;

@@ -1,9 +1,9 @@
 package dev.ckateptb.webmorph.mixins.rsocket;
 
+import dev.ckateptb.webmorph.configuration.rsocket.interfaces.RSocketHolder;
 import io.rsocket.RSocket;
 import lombok.Getter;
 import lombok.Setter;
-import dev.ckateptb.webmorph.configuration.rsocket.interfaces.RSocketHolder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.springframework.security.rsocket.core.DefaultPayloadExchange;
 

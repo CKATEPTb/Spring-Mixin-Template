@@ -1,11 +1,11 @@
 package dev.ckateptb.webmorph.configuration.rsocket;
 
+import dev.ckateptb.webmorph.configuration.rsocket.exception.ExceptionMessageHandlerAdvice;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.rsocket.metadata.AuthMetadataCodec;
 import io.rsocket.metadata.WellKnownAuthType;
 import io.rsocket.metadata.WellKnownMimeType;
-import dev.ckateptb.webmorph.configuration.rsocket.exception.ExceptionMessageHandlerAdvice;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +37,8 @@ public class RSocketConfiguration {
                         switch (value) {
                             case BEARER ->
                                     stringObjectMap.put("authentication", new String(AuthMetadataCodec.readBearerTokenAsCharArray(rawAuthentication)));
-                            case SIMPLE -> throw new UnsupportedOperationException("Simple authentication not supported!");
+                            case SIMPLE ->
+                                    throw new UnsupportedOperationException("Simple authentication not supported!");
                         }
                     });
                 })

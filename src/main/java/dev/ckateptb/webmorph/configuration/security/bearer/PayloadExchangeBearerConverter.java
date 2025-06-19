@@ -21,7 +21,7 @@ public class PayloadExchangeBearerConverter extends AuthenticationPayloadExchang
     @Override
     public Mono<Authentication> convert(PayloadExchange exchange) {
         Map<String, Object> extract = strategies.metadataExtractor().extract(exchange.getPayload(), exchange.getMetadataMimeType());
-        if(!(extract.get("authentication") instanceof String token)) return Mono.empty();
+        if (!(extract.get("authentication") instanceof String token)) return Mono.empty();
         DecodedJWT decode = JWT.decode(token);
         return Mono.empty();
     }

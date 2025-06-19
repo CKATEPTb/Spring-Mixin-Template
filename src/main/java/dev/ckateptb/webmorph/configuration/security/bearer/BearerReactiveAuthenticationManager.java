@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class BearerReactiveAuthenticationManager implements ReactiveAuthenticationManager {
-//    @Value("org.sbooster.webmorph.jwt.secret")
+    //    @Value("org.sbooster.webmorph.jwt.secret")
 //    private final String secret;
     private final Algorithm algorithm = Algorithm.HMAC256("this.secret");
 
@@ -26,7 +26,8 @@ public class BearerReactiveAuthenticationManager implements ReactiveAuthenticati
 //                        bearerAuthentication.setAuthenticated(isValid);
 //                        return bearerAuthentication;
 //                    });
-        /*} else*/ return Mono.error(new IllegalArgumentException("BearerPayloadExchangeConverter is only supported for now"));
+        /*} else*/
+        return Mono.error(new IllegalArgumentException("BearerPayloadExchangeConverter is only supported for now"));
     }
 
     private Mono<Boolean> validate(BearerAuthenticationToken authentication) {
