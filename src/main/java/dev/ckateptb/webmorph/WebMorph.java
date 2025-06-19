@@ -28,6 +28,7 @@ import java.util.Set;
 public class WebMorph {
     public static final EventBus EVENT_BUS = new EventBus();
 
+    @Deprecated
     public static GenericApplicationContext bootstrap(String[] args) {
         return bootstrap(getCallerClass(), args);
     }
