@@ -176,7 +176,7 @@ JAR.
 ## 🧰 Usage
 
 ```java
-import org.sbooster.webmorph.events.MixinTransformerRegistrationEvent;
+import dev.ckateptb.webmorph.events.MixinTransformerRegistrationEvent;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
@@ -192,6 +192,10 @@ public class Application {
     }
 }
 ```
+
+### ⚠️ Critical Note
+
+Start with VM options: `--add-opens java.base/java.lang=ALL-UNNAMED`
 
 ### ⚠️ Note
 
