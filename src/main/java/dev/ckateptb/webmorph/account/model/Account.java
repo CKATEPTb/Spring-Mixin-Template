@@ -1,5 +1,6 @@
 package dev.ckateptb.webmorph.account.model;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.luckperms.api.model.data.NodeMap;
 import net.luckperms.api.model.group.Group;
@@ -10,15 +11,18 @@ import net.luckperms.api.node.types.InheritanceNode;
 import net.luckperms.api.node.types.MetaNode;
 import net.luckperms.api.node.types.PermissionNode;
 import net.luckperms.api.query.QueryOptions;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RequiredArgsConstructor
-//todo использовать Account вместо User в security
 public class Account {
+    @Getter
     private final User user;
     private final UserManager userManager;
+    private final PasswordEncoder passwordEncoder;
 
     public Collection<Group> getGroups() {
         return this.user.getInheritedGroups(QueryOptions.nonContextual());
@@ -57,9 +61,9 @@ public class Account {
         return metadata == null ? defaultValue : metadata;
     }
 
-    public void setMetadata(String key, String value) {
+    public boolean setMetadata(String key, String value) {
         this.removeMetadata(key);
-        user.data().add(MetaNode.builder(key, value).build());
+        return user.data().add(MetaNode.builder(key, value).build()).wasSuccessful();
     }
 
     public void removeMetadata(String key) {
@@ -71,9 +75,27 @@ public class Account {
         }
     }
 
+    public boolean passwordMatches(String password) {
+        return this.passwordEncoder.matches(this.getMetadata("password"), password);
+    }
+
+    public boolean setPassword(String password) {
+        return this.setMetadata("password", password);
+    }
+
+    public boolean setUsername(String username) {
+        return this.setMetadata("username", username);
+    }
+
+    public UUID getUuid() {
+        return this.user.getUniqueId();
+    }
+
+    public String getUsername() {
+        return this.getMetadata("username");
+    }
+
     public Mono<Void> save() {
         return Mono.fromFuture(this.userManager.saveUser(user));
     }
-
-    // todo username, password
 }

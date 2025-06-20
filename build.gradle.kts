@@ -71,6 +71,9 @@ dependencies {
     // JWT
     implementation("com.auth0:java-jwt:4.2.1")
 
+    // Cache
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
+
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-validation:3.5.0")
     implementation("org.springframework.boot:spring-boot-starter-rsocket:3.5.0")
