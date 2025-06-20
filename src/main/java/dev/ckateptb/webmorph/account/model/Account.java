@@ -16,6 +16,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RequiredArgsConstructor
 public class Account {
@@ -23,6 +25,7 @@ public class Account {
     private final User user;
     private final UserManager userManager;
     private final PasswordEncoder passwordEncoder;
+    private final AtomicBoolean usernameUpdated = new AtomicBoolean(false);
 
     public Collection<Group> getGroups() {
         return this.user.getInheritedGroups(QueryOptions.nonContextual());
@@ -63,11 +66,11 @@ public class Account {
 
     public boolean setMetadata(String key, String value) {
         this.removeMetadata(key);
-        return user.data().add(MetaNode.builder(key, value).build()).wasSuccessful();
+        return this.user.data().add(MetaNode.builder(key, value).build()).wasSuccessful();
     }
 
     public void removeMetadata(String key) {
-        NodeMap data = user.data();
+        NodeMap data = this.user.data();
         for (Node node : data.toCollection()) {
             if (node instanceof MetaNode meta && meta.getMetaKey().equals(key)) {
                 data.remove(meta);
@@ -84,7 +87,8 @@ public class Account {
     }
 
     public boolean setUsername(String username) {
-        return this.setMetadata("username", username);
+        this.usernameUpdated.set(true);
+        return this.setMetadata("username", username.toLowerCase());
     }
 
     public UUID getUuid() {
@@ -96,6 +100,9 @@ public class Account {
     }
 
     public Mono<Void> save() {
-        return Mono.fromFuture(this.userManager.saveUser(user));
+        return Mono.fromFuture(() -> this.usernameUpdated.getAndSet(false) ?
+                        this.userManager.savePlayerData(this.getUuid(), this.getUsername()) :
+                        CompletableFuture.completedFuture(null))
+                .then(Mono.fromFuture(() -> this.userManager.saveUser(user)));
     }
 }
