@@ -27,8 +27,7 @@ public class BearerReactiveAuthenticationManager implements ReactiveAuthenticati
     @PostConstruct
     public void warnOnDummyAlgorithm() {
         if (this.algorithm.isEmpty()) log.warn("""
-                        No authentication algorithm configured. Algorithm bean not found in current application context.
-                """);
+                No authentication algorithm configured. Algorithm bean not found in current application context.""");
     }
 
     @Override
