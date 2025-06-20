@@ -2,11 +2,11 @@ package dev.ckateptb.webmorph.configuration.security.bearer;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import dev.ckateptb.webmorph.account.model.Account;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.luckperms.api.model.user.User;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -39,25 +39,25 @@ public class BearerReactiveAuthenticationManager implements ReactiveAuthenticati
 
     public Mono<Boolean> validate(Authentication authentication) {
         if (!(authentication instanceof BearerAuthenticationToken token)) return Mono.just(false);
-        User principal = token.getPrincipal();
+        Account principal = token.getPrincipal();
         return Mono.fromCallable(() -> {
             JWT.require(this.algorithm.orElse(this.dummyAlgorithm))
-                    .withSubject(principal.getUniqueId().toString())
+                    .withSubject(principal.getUuid().toString())
                     .withClaim("ema", principal.getUsername())
-                    .withClaim("pwd", principal.getCachedData().getMetaData().getMetaValue("pwd"))
+                    .withClaim("pwd", principal.getMetadata("password"))
                     .build()
                     .verify(token.getCredentials());
             return true;
         }).onErrorReturn(false);
     }
 
-    public Mono<String> generateJWT(User user, boolean rememberMe) {
+    public Mono<String> generateJWT(Account account, boolean rememberMe) {
         Instant now = Instant.now();
         return Mono.fromCallable(() -> JWT.create()
-                .withSubject(user.getUniqueId().toString())
-                .withClaim("ema", user.getUsername())
-                .withClaim("pwd", user.getCachedData().getMetaData().getMetaValue("pwd"))
-                .withExpiresAt(rememberMe ? now.plus(12, ChronoUnit.HOURS) : now.plus(6, ChronoUnit.HOURS)) // TODO: Grep from configuration properties
+                .withSubject(account.getUuid().toString())
+                .withClaim("ema", account.getUsername())
+                .withClaim("pwd", account.getMetadata("password"))
+                .withExpiresAt(rememberMe ? now.plus(12, ChronoUnit.HOURS) : now.plus(6, ChronoUnit.HOURS)) // TODO: Сделать ивент JWTSignEvent и там уже вешать expires
                 .sign(this.algorithm.orElse(this.dummyAlgorithm)));
     }
 }

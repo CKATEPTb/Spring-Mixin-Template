@@ -34,10 +34,15 @@ public class RSocketConfiguration {
                         ByteBuf raw = Unpooled.wrappedBuffer(s);
                         WellKnownAuthType value = AuthMetadataCodec.readWellKnownAuthType(raw);
                         switch (value) {
-                            case BEARER ->
-                                    map.put("auth", new String(AuthMetadataCodec.readBearerTokenAsCharArray(raw)));
-                            case SIMPLE ->
-                                    throw new UnsupportedOperationException("Simple auth not supported!");
+                            case BEARER -> {
+                                map.put("authType", WellKnownAuthType.BEARER);
+                                map.put("token", new String(AuthMetadataCodec.readBearerTokenAsCharArray(raw)));
+                            }
+                            case SIMPLE -> {
+                                map.put("authType", WellKnownAuthType.SIMPLE);
+                                map.put("username", new String(AuthMetadataCodec.readUsernameAsCharArray(raw)));
+                                map.put("password", new String(AuthMetadataCodec.readPasswordAsCharArray(raw)));
+                            }
                         }
                     });
                 })
