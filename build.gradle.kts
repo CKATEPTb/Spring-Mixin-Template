@@ -1,6 +1,21 @@
 import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
+import java.io.ByteArrayOutputStream
+
+val gitHash: String by lazy {
+    try {
+        val stdout = ByteArrayOutputStream()
+        exec {
+            commandLine("git", "rev-parse", "--short", "HEAD")
+            standardOutput = stdout
+        }
+        stdout.toString(Charsets.UTF_8).trim()
+    } catch (e: Exception) {
+        "unknown"
+    }
+}
 
 group = "dev.ckateptb"
+//version = "0.1.0-${gitHash}"
 version = "0.1.0-SNAPSHOT"
 
 plugins {
