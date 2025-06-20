@@ -23,7 +23,7 @@ import org.springframework.web.method.ControllerAdviceBean;
  *
  * @see org.springframework.messaging.handler.MessagingAdviceBean
  * @see org.springframework.web.bind.annotation.ControllerAdvice
- * @see org.springframework.web.bind.annotation.MessageExceptionHandler
+// * @see org.springframework.web.bind.annotation.MessageExceptionHandler
  */
 @SuppressWarnings("NullableProblems")
 public record ExceptionMessageHandlerAdvice(ControllerAdviceBean adviceBean) implements MessagingAdviceBean {

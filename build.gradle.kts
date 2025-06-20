@@ -89,8 +89,21 @@ tasks {
         mergeServiceFiles()
         transform(Log4j2PluginsCacheFileTransformer::class.java)
     }
+    register<Jar>("sourcesJar") {
+        archiveClassifier.set("sources")
+        from(sourceSets.main.get().allSource)
+    }
+    register<Jar>("javadocJar") {
+        archiveClassifier.set("javadoc")
+        from(javadoc)
+    }
+    javadoc {
+        options.encoding = "UTF-8"
+        options.memberLevel = JavadocMemberLevel.PUBLIC
+        isFailOnError = false
+    }
     build {
-        dependsOn(shadowJar)
+        dependsOn("sourcesJar", "javadocJar", shadowJar)
     }
     jar {
         enabled = false
@@ -101,6 +114,8 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             artifact(tasks.getByName("shadowJar").outputs.files.singleFile)
+            artifact(tasks.getByName("sourcesJar"))
+            artifact(tasks.getByName("javadocJar"))
         }
     }
 }
