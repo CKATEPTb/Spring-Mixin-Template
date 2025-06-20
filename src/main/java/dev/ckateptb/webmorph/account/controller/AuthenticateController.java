@@ -1,25 +1,15 @@
 package dev.ckateptb.webmorph.account.controller;
 
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.rsocket.annotation.ConnectMapping;
+import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
-@RestController
+// TODO Должен авторизовывать сокет по metadataPush, а http по куки
+@Controller
 public class AuthenticateController {
-    @PostMapping("account/authenticate")
-    @MessageMapping("account.authenticate")
-    public Mono<Void> authenticate(@Validated @RequestBody @Payload AuthenticateRequest request) {
 
-    }
-
-    public record AuthenticateRequest(
-            String username,
-            String password,
-            boolean remember
-    ) {
+    @ConnectMapping
+    public Mono<Void> authenticate() {
+        return Mono.empty();
     }
 }
