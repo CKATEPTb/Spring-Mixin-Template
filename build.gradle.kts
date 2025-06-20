@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
 
 group = "dev.ckateptb"
-version = "0.0.3-SNAPSHOT"
+version = "0.1.0-SNAPSHOT"
 
 plugins {
     id("java")

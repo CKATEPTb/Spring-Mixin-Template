@@ -2,6 +2,7 @@ package dev.ckateptb.webmorph.mixin.rsocket;
 
 import dev.ckateptb.webmorph.configuration.rsocket.api.RSocketHolder;
 import io.rsocket.Payload;
+import io.rsocket.RSocket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +12,17 @@ import org.springframework.security.rsocket.core.DefaultPayloadExchange;
 import org.springframework.util.MimeType;
 import reactor.util.context.Context;
 
+/**
+ * Redirects the instantiation of {@link org.springframework.security.rsocket.core.DefaultPayloadExchange}
+ * inside the interceptor pipeline to inject the {@link RSocket} from the Reactor {@link Context}.
+ * <p>
+ * Ensures that the {@link DefaultPayloadExchange} carries a reference to the {@link RSocket}
+ * that initiated the connection, allowing access to connection-level metadata or state.
+ * <p>
+ * Requires that {@link DefaultPayloadExchange} implements {@link dev.ckateptb.webmorph.configuration.rsocket.api.RSocketHolder}.
+ * <p>
+ * Part.3 (final) of closing FIX-ME in Spring Security RSocket: "do we want to make the sendingSocket available in the PayloadExchange".
+ */
 @Mixin(targets = "org.springframework.security.rsocket.core.PayloadInterceptorRSocket")
 public class MixinPayloadInterceptorRSocket {
     @Shadow
