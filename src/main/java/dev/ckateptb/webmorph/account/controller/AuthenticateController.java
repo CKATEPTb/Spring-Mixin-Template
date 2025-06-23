@@ -1,6 +1,7 @@
 package dev.ckateptb.webmorph.account.controller;
 
 import dev.ckateptb.webmorph.account.AccountService;
+import dev.ckateptb.webmorph.account.event.AccountAuthenticateEvent;
 import io.netty.buffer.ByteBufAllocator;
 import io.rsocket.metadata.AuthMetadataCodec;
 import io.rsocket.metadata.WellKnownMimeType;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
-import java.time.Duration;
 
 /**
  * Handles authentication requests for both RSocket and HTTP clients.
@@ -98,7 +97,8 @@ public class AuthenticateController {
                     .httpOnly(false)
                     .secure(true)
                     .path("/")
-                    .maxAge(request.rememberMe ? Duration.ofDays(365) : Duration.ofHours(6)) // todo вынести в ивент
+                    .maxAge(new AccountAuthenticateEvent(request.username, request.rememberMe)
+                            .<AccountAuthenticateEvent>dispatch().getLifetime())
                     .build();
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, cookie.toString())

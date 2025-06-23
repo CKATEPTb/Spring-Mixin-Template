@@ -2,6 +2,7 @@ package dev.ckateptb.webmorph.configuration.security.bearer;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import dev.ckateptb.webmorph.account.event.AccountAuthenticateEvent;
 import dev.ckateptb.webmorph.account.model.Account;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 /**
@@ -123,7 +123,8 @@ public class BearerReactiveAuthenticationManager implements ReactiveAuthenticati
                 .withSubject(account.getUuid().toString())
                 .withClaim("ema", account.getUsername())
                 .withClaim("pwd", account.getMetadata("password"))
-                .withExpiresAt(rememberMe ? now.plus(365, ChronoUnit.DAYS) : now.plus(6, ChronoUnit.HOURS)) // TODO: Сделать ивент JWTSignEvent и там уже вешать expires, на забыть поменять бы еще в javadoc
+                .withExpiresAt(now.plus(new AccountAuthenticateEvent(account.getUsername(), rememberMe)
+                        .<AccountAuthenticateEvent>dispatch().getLifetime()))
                 .sign(this.algorithm.orElse(this.dummyAlgorithm)));
     }
 }

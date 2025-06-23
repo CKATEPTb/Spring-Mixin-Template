@@ -54,7 +54,6 @@ public class SecurityConfiguration {
      * @param rsocket     the RSocket security builder
      * @param interceptor the authentication payload interceptor
      * @return the final {@link PayloadSocketAcceptorInterceptor} for connection handling
-     * todo научить обрабатывать hasPermission из luckperms
      */
     @Bean
     public PayloadSocketAcceptorInterceptor authorizationToken(RSocketSecurity rsocket, AuthenticationPayloadInterceptor interceptor) {
