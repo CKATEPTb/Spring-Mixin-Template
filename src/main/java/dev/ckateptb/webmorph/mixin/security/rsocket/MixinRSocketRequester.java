@@ -1,4 +1,4 @@
-package dev.ckateptb.webmorph.mixin.rsocket;
+package dev.ckateptb.webmorph.mixin.security.rsocket;
 
 import dev.ckateptb.webmorph.configuration.security.api.AuthHolder;
 import lombok.Setter;
