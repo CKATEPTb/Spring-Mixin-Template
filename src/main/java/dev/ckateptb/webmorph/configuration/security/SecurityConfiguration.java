@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.PayloadInterceptorOrder;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +23,7 @@ import org.springframework.security.rsocket.core.PayloadSocketAcceptorIntercepto
  * authorization for RSocket payloads using a custom JWT-based flow.
  */
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
 @EnableRSocketSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfiguration {
