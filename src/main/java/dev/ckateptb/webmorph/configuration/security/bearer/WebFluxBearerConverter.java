@@ -2,6 +2,7 @@ package dev.ckateptb.webmorph.configuration.security.bearer;
 
 import com.auth0.jwt.JWT;
 import dev.ckateptb.webmorph.account.AccountService;
+import dev.ckateptb.webmorph.account.model.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
@@ -11,6 +12,14 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+/**
+ * A {@link ServerAuthenticationConverter} implementation that extracts a JWT token
+ * from an HTTP cookie named {@code auth_token}, decodes it, and resolves the associated
+ * {@link Account} using the {@link AccountService}.
+ * <p>
+ * If the token is valid and the corresponding account exists, an {@link Authentication}
+ * object (specifically a {@link BearerAuthenticationToken}) is created and returned.
+ */
 @Component
 @RequiredArgsConstructor
 public class WebFluxBearerConverter implements ServerAuthenticationConverter {
