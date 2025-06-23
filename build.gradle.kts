@@ -16,7 +16,7 @@ val gitHash: String by lazy {
 
 group = "dev.ckateptb"
 //version = "0.1.0-${gitHash}"
-version = "0.2.0-SNAPSHOT"
+version = "0.2.1-SNAPSHOT"
 
 plugins {
     id("java-library")
@@ -128,7 +128,7 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifact(tasks.getByName("jar"))
+            from(components["java"])
             artifact(tasks.getByName("sourcesJar"))
             artifact(tasks.getByName("javadocJar"))
         }
