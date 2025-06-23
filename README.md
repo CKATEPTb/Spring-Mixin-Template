@@ -29,9 +29,9 @@ full-featured backend systems — fast and clean.
       and manipulate any structure in your runtime, no matter how hidden.
 - 🟢 ⚡ **RSocket + WebFlux** — Unified reactive entrypoint supporting both WebSocket and HTTP (XHR) in a single
   context.
-- 🔴 🔐 **Spring Security with JWT** — Centralized JWT authentication shared across RSocket and WebFlux — one token, one
+- 🟡 🔐 **Spring Security with JWT** — Centralized JWT authentication shared across RSocket and WebFlux — one token, one
   security context.
-    - 🟡 🛂 **LuckPerms integration** — Powerful permission and meta system, fully integrated into Spring Security for
+    - 🟢 🛂 **LuckPerms integration** — Powerful permission and meta system, fully integrated into Spring Security for
       fine-grained access control.
 - 🟢 📡 **EventBus** — Incredibly easy to use. Subscribe, transform, or cancel events with full control over the
   reactive flow — all with minimal overhead.
