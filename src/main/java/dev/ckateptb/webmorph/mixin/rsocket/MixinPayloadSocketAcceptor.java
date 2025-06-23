@@ -1,11 +1,17 @@
 package dev.ckateptb.webmorph.mixin.rsocket;
 
+import dev.ckateptb.webmorph.configuration.rsocket.api.RSocketHolder;
 import io.rsocket.ConnectionSetupPayload;
+import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import net.lenni0451.classtransform.InjectionCallback;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.springframework.security.rsocket.api.PayloadExchangeType;
+import org.springframework.security.rsocket.core.DefaultPayloadExchange;
+import org.springframework.util.MimeType;
 import reactor.core.publisher.Mono;
 
 /**
@@ -21,7 +27,19 @@ import reactor.core.publisher.Mono;
 public class MixinPayloadSocketAcceptor {
     @Inject(method = "accept", at = @At(value = "RETURN"), cancellable = true)
     public void accept(ConnectionSetupPayload setup, RSocket sendingSocket, InjectionCallback callback) {
+        ((RSocketHolder) setup).setRSocket(sendingSocket);
         Mono<RSocket> mono = callback.castReturnValue();
         callback.setReturnValue(mono != null ? mono.contextWrite(context -> context.put("rsocket", sendingSocket)) : Mono.empty());
+    }
+
+    @Redirect(method = "lambda$intercept$2", at = @At(
+            value = "NEW",
+            target = "Lorg/springframework/security/rsocket/core/DefaultPayloadExchange;<init>(Lorg/springframework/security/rsocket/api/PayloadExchangeType;Lio/rsocket/Payload;Lorg/springframework/util/MimeType;Lorg/springframework/util/MimeType;)V"
+    ))
+    private DefaultPayloadExchange extendDefaultPayloadExchange(PayloadExchangeType type, Payload payload, MimeType metadataMimeType,
+                                                                MimeType dataMimeType) {
+        DefaultPayloadExchange exchange = new DefaultPayloadExchange(type, payload, metadataMimeType, dataMimeType);
+        ((RSocketHolder) exchange).setRSocket(((RSocketHolder) payload).getRSocket());
+        return exchange;
     }
 }

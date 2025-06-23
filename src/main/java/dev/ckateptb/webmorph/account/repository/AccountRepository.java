@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import dev.ckateptb.webmorph.account.model.Account;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.UserManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ import java.util.UUID;
  * with optional creation and caching of {@link Account} instances
  * using Caffeine for short-term reuse.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountRepository {
@@ -47,10 +49,8 @@ public class AccountRepository {
     public Mono<Boolean> existsByUsername(String username) {
         final String lowerCase = username.toLowerCase();
         return Mono.fromFuture(this.luckPerms.getUserManager().lookupUniqueId(lowerCase))
-                .flatMap(uuid -> Mono.just(true)
-                        .contextWrite(context -> context.put("uuid", uuid)))
-                .switchIfEmpty(Mono.just(false))
-                .contextWrite(context -> context.put("username", lowerCase));
+                .map(unused -> true)
+                .switchIfEmpty(Mono.just(false));
     }
 
     /**
@@ -63,10 +63,8 @@ public class AccountRepository {
      */
     public Mono<Boolean> existsByUuid(UUID uuid) {
         return Mono.fromFuture(this.luckPerms.getUserManager().lookupUsername(uuid))
-                .flatMap(username -> Mono.just(true)
-                        .contextWrite(context -> context.put("username", username)))
-                .switchIfEmpty(Mono.just(false))
-                .contextWrite(context -> context.put("uuid", uuid));
+                .map(unused -> true)
+                .switchIfEmpty(Mono.just(false));
     }
 
     /**
@@ -78,10 +76,7 @@ public class AccountRepository {
      * @return a {@link Mono} emitting the {@link Account} if found
      */
     public Mono<Account> findByUuid(UUID uuid) {
-        return this.existsByUuid(uuid)
-                .filter(Boolean::booleanValue)
-                .transformDeferredContextual((ignored, context) ->
-                        Mono.just(context.get("username")).cast(String.class))
+        return Mono.fromFuture(this.luckPerms.getUserManager().lookupUsername(uuid))
                 .flatMap(username -> this.findOrCreate(uuid, username));
     }
 
@@ -94,10 +89,8 @@ public class AccountRepository {
      * @return a {@link Mono} emitting the {@link Account} if found
      */
     public Mono<Account> findByUsername(String username) {
-        return this.existsByUsername(username)
-                .filter(Boolean::booleanValue)
-                .transformDeferredContextual((ignored, context) ->
-                        Mono.just(context.get("uuid")).cast(UUID.class))
+        final String lowerCase = username.toLowerCase();
+        return Mono.fromFuture(this.luckPerms.getUserManager().lookupUniqueId(lowerCase))
                 .flatMap(uuid -> this.findOrCreate(uuid, username));
     }
 
@@ -118,6 +111,8 @@ public class AccountRepository {
         return Mono.fromFuture(this.cache.get(uuid, (key, ignored) ->
                 Mono.fromFuture(userManager.loadUser(uuid, lowerCaseUsername))
                         .map(user -> new Account(user, userManager, this.passwordEncoder))
+                        .doOnNext(account -> account.setUsername(lowerCaseUsername))
+                        .flatMap(account -> account.save().then(Mono.just(account)))
                         .toFuture()));
     }
 }

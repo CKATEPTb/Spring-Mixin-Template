@@ -123,7 +123,7 @@ public class BearerReactiveAuthenticationManager implements ReactiveAuthenticati
                 .withSubject(account.getUuid().toString())
                 .withClaim("ema", account.getUsername())
                 .withClaim("pwd", account.getMetadata("password"))
-                .withExpiresAt(rememberMe ? now.plus(1, ChronoUnit.YEARS) : now.plus(6, ChronoUnit.HOURS)) // TODO: Сделать ивент JWTSignEvent и там уже вешать expires, на забыть поменять бы еще в javadoc
+                .withExpiresAt(rememberMe ? now.plus(365, ChronoUnit.DAYS) : now.plus(6, ChronoUnit.HOURS)) // TODO: Сделать ивент JWTSignEvent и там уже вешать expires, на забыть поменять бы еще в javadoc
                 .sign(this.algorithm.orElse(this.dummyAlgorithm)));
     }
 }

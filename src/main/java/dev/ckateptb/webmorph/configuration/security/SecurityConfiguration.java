@@ -2,7 +2,6 @@ package dev.ckateptb.webmorph.configuration.security;
 
 import dev.ckateptb.webmorph.configuration.security.bearer.BearerReactiveAuthenticationManager;
 import dev.ckateptb.webmorph.configuration.security.bearer.PayloadExchangeBearerConverter;
-import net.luckperms.api.LuckPerms;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
 import org.springframework.security.config.annotation.rsocket.PayloadInterceptorOrder;
 import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +23,7 @@ import org.springframework.security.rsocket.core.PayloadSocketAcceptorIntercepto
  * authorization for RSocket payloads using a custom JWT-based flow.
  */
 @Configuration
+@EnableWebSecurity
 @EnableRSocketSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfiguration {
